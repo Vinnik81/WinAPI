@@ -1,8 +1,8 @@
-#include<Windows.h>
+п»ї#include<Windows.h>
 #include"resource.h"
 
-CONST CHAR g_szLoginDefaultMessege[] = "Введите логин";
-CONST CHAR g_szPasswordDefaultMessege[] = "Введите пароль";
+CONST CHAR g_szLoginDefaultMessege[] = "Р’РІРµРґРёС‚Рµ Р»РѕРіРёРЅ";
+CONST CHAR g_szPasswordDefaultMessege[] = "Р’РІРµРґРёС‚Рµ РїР°СЂРѕР»СЊ";
 
 BOOL CALLBACK DlgProc(HWND hwd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -18,8 +18,8 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	case WM_INITDIALOG: //Создаются элементы интерфейса, производится начальная настройка окна. 
-		//Этот case отрабатывает только при первом запуске.
+	case WM_INITDIALOG: //РЎРѕР·РґР°СЋС‚СЃСЏ СЌР»РµРјРµРЅС‚С‹ РёРЅС‚РµСЂС„РµР№СЃР°, РїСЂРѕРёР·РІРѕРґРёС‚СЃСЏ РЅР°С‡Р°Р»СЊРЅР°СЏ РЅР°СЃС‚СЂРѕР№РєР° РѕРєРЅР°. 
+		//Р­С‚РѕС‚ case РѕС‚СЂР°Р±Р°С‚С‹РІР°РµС‚ С‚РѕР»СЊРєРѕ РїСЂРё РїРµСЂРІРѕРј Р·Р°РїСѓСЃРєРµ.
 		{
 			HICON hIcon = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON1));
 			SendMessage(hwnd, WM_SETICON, 0, (LPARAM)hIcon);
@@ -29,7 +29,7 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			SendMessage(GetDlgItem(hwnd, IDC_EDIT_PASSWORD), WM_SETTEXT, 0, (LPARAM)g_szPasswordDefaultMessege);
 		}
 		break;
-	case WM_COMMAND:		//Обрабатывает нажатие кнопок и любые обращения к элементам окна.
+	case WM_COMMAND:		//РћР±СЂР°Р±Р°С‚С‹РІР°РµС‚ РЅР°Р¶Р°С‚РёРµ РєРЅРѕРїРѕРє Рё Р»СЋР±С‹Рµ РѕР±СЂР°С‰РµРЅРёСЏ Рє СЌР»РµРјРµРЅС‚Р°Рј РѕРєРЅР°.
 	{
 		CONST INT SIZE = 256;
 		CHAR sz_buffer[SIZE] = {};
@@ -37,7 +37,7 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		HWND hPassword = GetDlgItem(hwnd, IDC_EDIT_PASSWORD);
 		switch (LOWORD(wParam))
 		{
-		case IDOK: MessageBox(hwnd, "Была нажата кнопка ОК", "info", MB_OK | MB_ICONINFORMATION); break;
+		case IDOK: MessageBox(hwnd, "Р‘С‹Р»Р° РЅР°Р¶Р°С‚Р° РєРЅРѕРїРєР° РћРљ", "info", MB_OK | MB_ICONINFORMATION); break;
 		case IDCANCEL: EndDialog(hwnd, 0); break;
 			//-------------------------------------------------------------------------------------
 		case IDC_BUTTON_COPY:
@@ -74,7 +74,7 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 	}
 		break;
-	case WM_CLOSE:			//Обрабатывает нажатие на крестик.
+	case WM_CLOSE:			//РћР±СЂР°Р±Р°С‚С‹РІР°РµС‚ РЅР°Р¶Р°С‚РёРµ РЅР° РєСЂРµСЃС‚РёРє.
 		EndDialog(hwnd, 0);
 	}
 	return FALSE;

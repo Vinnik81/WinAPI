@@ -3,28 +3,32 @@
 #include<cstdio>
 #include"resource.h"
 
-#define IDC_STATIC 1000		//
+#define IDC_STATIC 1000		//Ресурс для static text
 
 CONST CHAR g_szClassName[] = "MyWindowClass"; //Имя класса окна
 CONST CHAR g_szWindowTitle[] = "My First Window";
+//g_ - Global
+//sz - string zero (NULL Terminated Line)
+//https://ru.wikipedia.org/wiki/%D0%92%D0%B5%D0%BD%D0%B3%D0%B5%D1%80%D1%81%D0%BA%D0%B0%D1%8F_%D0%BD%D0%BE%D1%82%D0%B0%D1%86%D0%B8%D1%8F
 
 INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nCmdShow)
 {
-	//1)
+	//1)Регистрация класса окна:
 	WNDCLASSEX wc; //wc - Window Class
 	wc.cbSize = sizeof(WNDCLASSEX);
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
-	wc.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON_DOCUM));
-	wc.hIconSm = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON_TXT));
+	wc.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON_DOCUM));	//Icon - отображается в панели задач
+	wc.hIconSm = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON_TXT));	//SmallIcon - отображается в строке заголовка
 	//wc.hIcon = (HICON)LoadImage(hInstance, "txt_file.ico", IMAGE_ICON, LR_DEFAULTSIZE, LR_DEFAULTSIZE, LR_LOADFROMFILE);
 	//wc.hIconSm = (HICON)LoadImage(hInstance, "document_contract.ico", IMAGE_ICON, LR_DEFAULTSIZE, LR_DEFAULTSIZE, LR_LOADFROMFILE);
 	wc.hCursor = LoadCursor(hInstance, (LPCSTR)IDC_CURSOR1);
 	wc.hInstance = hInstance;
 	wc.hbrBackground = (HBRUSH)COLOR_WINDOW;
-	wc.lpfnWndProc = (WNDPROC)WndProc;	//
+	wc.lpfnWndProc = (WNDPROC)WndProc;	//Имя функции - это указатель на функцию, 
+	//оно содержит адрес, по которому функция загружена в память.
 	wc.lpszClassName = g_szClassName;
 	wc.lpszMenuName = NULL;
 	wc.style = 0;
@@ -34,7 +38,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, in
 		MessageBox(NULL, "Class registration failed :-(", "Error", MB_OK | MB_ICONERROR);
 		return NULL;
 	}
-	//2)
+	//2)Создание окна:
 
 	int screen_width = GetSystemMetrics(SM_CXSCREEN);
 	int screen_height = GetSystemMetrics(SM_CYSCREEN);
@@ -45,14 +49,16 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, in
 
 	HWND hwnd = CreateWindowEx
 	(
-		NULL,	//
+		NULL,	//exStyle
 		g_szClassName,
 		g_szWindowTitle,
-		WS_OVERLAPPEDWINDOW,	//
-		start_x, start_y,	//
-		window_width, window_height,	//
-		NULL,	//
-		NULL,	//
+		WS_OVERLAPPEDWINDOW,	//Главное окно, у которого есть строка заголовка, 
+		//кнопки управления окном, может изменяться по размерам....
+		start_x, start_y,	//Положение окна на экране
+		window_width, window_height,	//Размер окна
+		NULL,	//Parent Window
+		NULL,	///ID ресурса меню, если окно главное (OVERLAPPED),
+				//или ID этого окна, если окно дочернее
 		hInstance,
 		NULL
 	);
@@ -61,9 +67,9 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, in
 		MessageBox(NULL, "Window creator failed!", "Error", MB_OK | MB_ICONERROR);
 		return 0;
 	}
-	ShowWindow(hwnd, nCmdShow);	//
-	UpdateWindow(hwnd);	//
-	//3)
+	ShowWindow(hwnd, nCmdShow);	///Задает режим отображения окна
+	UpdateWindow(hwnd);	//Рисует окно.
+	//3)Запуск цикла сообщений:
 	MSG msg;
 	while (GetMessage(&msg, NULL, 0, 0) > 0)
 	{
@@ -80,7 +86,8 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_CREATE:
 	{
-		//
+		//CreateWindowExA - ANSI-кодировка
+		//CreateWindowExW - Wide-кодировка (Unicode)
 		HWND hStatic = CreateWindowEx
 		(
 			0,
@@ -92,7 +99,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			50,
 			hwnd,
 			(HMENU)IDC_STATIC,
-			GetModuleHandle(NULL),	//
+			GetModuleHandle(NULL),	//GetModuleHandle(NULL) - Возвращает hInstance
 			0
 		);
 	}
@@ -103,11 +110,13 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		CONST INT SIZE = 256;
 		CHAR sz_msg[SIZE] = {};
-		RECT rect;	//
+		RECT rect;	//прямоугольник окна
 		GetWindowRect(hwnd, &rect);
 		int window_width = rect.right - rect.left;
 		int window_height = rect.bottom - rect.top;
 		sprintf(sz_msg, "%s - Size: %ix%i, Position: %ix%i", g_szWindowTitle, window_width, window_height, rect.left, rect.top);
+		//https://www.cplusplus.com/reference/cstdio/sprintf/
+		//https://www.cplusplus.com/reference/cstdio/printf/
 		SendMessage(hwnd, WM_SETTEXT, 0, (LPARAM)sz_msg);
 		SendMessage(GetDlgItem(hwnd, IDC_STATIC), WM_SETTEXT, 0, (LPARAM)sz_msg);
 	}
@@ -116,7 +125,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		if(MessageBox(hwnd, "Вы действительно хотите закрыть окно?", "Question", MB_YESNO | MB_ICONQUESTION) == IDYES)
 			DestroyWindow(hwnd);
 		break;
-	case WM_DESTROY:	//
+	case WM_DESTROY:	//уничтожить окно
 		PostQuitMessage(NULL);
 		break;
 	default: return DefWindowProc(hwnd, uMsg, wParam, lParam);

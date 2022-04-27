@@ -20,6 +20,7 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_INITDIALOG:
 	{
 		HWND hListBox = GetDlgItem(hwnd, IDC_LIST1);
+		HWND hEditText = GetDlgItem(hwnd, IDC_EDIT2);
 		for (int i = 0; i < sizeof(string) / sizeof(string[0]); i++)
 		{
 			SendMessage(hListBox, LB_ADDSTRING, 0, (LPARAM)string[i]);
@@ -40,6 +41,19 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			CHAR sz_msg[SIZE] = {};
 			sprintf(sz_msg, "Вы выбрали элемент № %d, со значением %s", i, sz_buffer);
 			MessageBox(hwnd, sz_msg, "Info", MB_OK | MB_ICONINFORMATION);
+		}
+			break;
+		case IDC_BUTTON_ADD:
+		{
+			CONST INT SIZE = 256;
+			CHAR sz_buffer[SIZE] = {};
+			HWND hListBox = GetDlgItem(hwnd, IDC_LIST1);
+			HWND hEditText = GetDlgItem(hwnd, IDC_EDIT2);
+			SendMessage(hEditText, WM_GETTEXT, SIZE, (LPARAM)sz_buffer);
+			SendMessage(hListBox, LB_ADDSTRING, 0, (LPARAM)sz_buffer);
+			SetFocus(hEditText);
+			int i = SendMessage(hListBox, LB_GETCURSEL, 0, 0);
+				SendMessage(hListBox, WM_SETTEXT, i, (LPARAM)sz_buffer);
 		}
 			break;
 		case IDCANCEL:  EndDialog(hwnd, 0); break;

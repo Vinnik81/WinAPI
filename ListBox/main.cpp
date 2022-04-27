@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+п»ї#define _CRT_SECURE_NO_WARNINGS
 #include<Windows.h>
 #include<cstdio>
 #include"resource.h"
@@ -39,7 +39,7 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			int i = SendMessage(hListBox, LB_GETCURSEL, 0, 0);
 			SendMessage(hListBox, LB_GETTEXT, i, (LPARAM)sz_buffer);
 			CHAR sz_msg[SIZE] = {};
-			sprintf(sz_msg, "Вы выбрали элемент № %d, со значением %s", i, sz_buffer);
+			sprintf(sz_msg, "Р’С‹ РІС‹Р±СЂР°Р»Рё СЌР»РµРјРµРЅС‚ в„– %d, СЃРѕ Р·РЅР°С‡РµРЅРёРµРј %s", i, sz_buffer);
 			MessageBox(hwnd, sz_msg, "Info", MB_OK | MB_ICONINFORMATION);
 		}
 			break;

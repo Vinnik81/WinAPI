@@ -53,7 +53,17 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			SendMessage(hListBox, LB_ADDSTRING, 0, (LPARAM)sz_buffer);
 			SetFocus(hEditText);
 			int i = SendMessage(hListBox, LB_GETCURSEL, 0, 0);
-				SendMessage(hListBox, WM_SETTEXT, i, (LPARAM)sz_buffer);
+			SendMessage(hListBox, WM_SETTEXT, i, (LPARAM)sz_buffer);
+		}
+			break;
+		case IDC_BUTTON_DELETE:
+		{
+			CONST INT SIZE = 256;
+			CHAR sz_buffer[SIZE] = {};
+			HWND hListBox = GetDlgItem(hwnd, IDC_LIST1);
+			int i = SendMessage(hListBox, LB_GETCURSEL, 0, 0);
+			SendMessage(hListBox, LB_DELETESTRING, i, 0);
+			
 		}
 			break;
 		case IDCANCEL:  EndDialog(hwnd, 0); break;

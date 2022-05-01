@@ -50,7 +50,7 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			HWND hListBox = GetDlgItem(hwnd, IDC_LIST1);
 			HWND hEditText = GetDlgItem(hwnd, IDC_EDIT2);
 			SendMessage(hEditText, WM_GETTEXT, SIZE, (LPARAM)sz_buffer);
-			SendMessage(hListBox, LB_ADDSTRING, 0, (LPARAM)sz_buffer);
+			if(strlen(sz_buffer)) SendMessage(hListBox, LB_ADDSTRING, 0, (LPARAM)sz_buffer);
 			SetFocus(hEditText);
 			int i = SendMessage(hListBox, LB_GETCURSEL, 0, 0);
 			SendMessage(hListBox, WM_SETTEXT, i, (LPARAM)sz_buffer);

@@ -30,6 +30,32 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_COMMAND:
 		switch (LOWORD(wParam))
 		{
+		case IDC_BUTTON_ADD:
+		{
+			DialogBoxParam(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_DIALOG_ADD), hwnd, DlgProc, 0);
+		}
+		break;
+		case IDOK_ADD:
+		{
+			CONST INT SIZE = 256;
+			CHAR sz_buffer[SIZE] = {};
+			HWND hEdit = GetDlgItem(hwnd, IDC_EDIT1);
+			SendMessage(hEdit, WM_GETTEXT, SIZE, (LPARAM)sz_buffer);
+			HWND parent = GetParent(hwnd);
+			HWND hListBox = GetDlgItem(parent, IDC_LIST1);
+			if(strlen(sz_buffer)) SendMessage(hListBox, LB_ADDSTRING, 0, (LPARAM)sz_buffer);
+			EndDialog(hwnd, 0);
+		}
+		break;
+		case IDC_BUTTON_DELETE:
+		{
+			CONST INT SIZE = 256;
+			CHAR sz_buffer[SIZE] = {};
+			HWND hListBox = GetDlgItem(hwnd, IDC_LIST1);
+			int i = SendMessage(hListBox, LB_GETCURSEL, 0, 0);
+			SendMessage(hListBox, LB_DELETESTRING, i, 0);
+		}
+		break;
 		case IDOK: 
 		{
 			CONST INT SIZE = 256;

@@ -165,6 +165,51 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		);
 		CreateWindowEx
 		(
+			0, "Button", "/",
+			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+			g_START_X + (g_iBtnSize + g_INTERVAL) * 3, g_START_Y + g_SCREEN_HEIGHT + g_INTERVAL,
+			g_iBtnSize, g_iBtnSize,
+			hwnd, (HMENU)IDC_BUTTON_SLASH,
+			GetModuleHandle(NULL), NULL
+		);
+		CreateWindowEx
+		(
+			0, "Button", "*",
+			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+			g_START_X + (g_iBtnSize + g_INTERVAL) * 3, g_START_Y + g_SCREEN_HEIGHT + (g_iBtnSize + g_INTERVAL),
+			g_iBtnSize, g_iBtnSize,
+			hwnd, (HMENU)IDC_BUTTON_ASTER,
+			GetModuleHandle(NULL), NULL
+		);
+		CreateWindowEx
+		(
+			0, "Button", "-",
+			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+			g_START_X + (g_iBtnSize + g_INTERVAL) * 3, g_START_Y + g_SCREEN_HEIGHT + (g_iBtnSize + g_INTERVAL) * 2,
+			g_iBtnSize, g_iBtnSize,
+			hwnd, (HMENU)IDC_BUTTON_MINUS,
+			GetModuleHandle(NULL), NULL
+		);
+		CreateWindowEx
+		(
+			0, "Button", "+",
+			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+			g_START_X + (g_iBtnSize + g_INTERVAL) * 3, g_START_Y + g_SCREEN_HEIGHT + (g_iBtnSize + g_INTERVAL) * 3,
+			g_iBtnSize, g_iBtnSize,
+			hwnd, (HMENU)IDC_BUTTON_PLUS,
+			GetModuleHandle(NULL), NULL
+		);
+		CreateWindowEx
+		(
+			0, "Button", "=",
+			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+			g_START_X + (g_iBtnSize + g_INTERVAL) * 4, g_START_Y + g_SCREEN_HEIGHT + (g_iBtnSize + g_INTERVAL) * 2,
+			g_iBtnSize, g_iBtnSize * 2 + g_INTERVAL,
+			hwnd, (HMENU)IDC_BUTTON_EQUAL,
+			GetModuleHandle(NULL), NULL
+		);
+		CreateWindowEx
+		(
 			0, "Button", "c",
 			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
 			g_START_X + (g_iBtnSize + g_INTERVAL) * 4, g_START_Y + g_SCREEN_HEIGHT + g_INTERVAL,

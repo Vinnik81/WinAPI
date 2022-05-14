@@ -12,10 +12,16 @@ CONST CHAR g_szWindowTitle[] = "Calculator";
 //https://ru.wikipedia.org/wiki/%D0%92%D0%B5%D0%BD%D0%B3%D0%B5%D1%80%D1%81%D0%BA%D0%B0%D1%8F_%D0%BD%D0%BE%D1%82%D0%B0%D1%86%D0%B8%D1%8F
 
 CONST INT g_SCREEN_HEIGHT = 25;
-CONST INT g_iBtnSize = 50;	//
-CONST INT g_INTERVAL = 2;	//
+CONST INT g_iBtnSize = 50;	//Размер кнопки в пикселях
+CONST INT g_INTERVAL = 2;	//Интервал между кнопками в пикселях
 const int g_START_X = 10;
 const int g_START_Y = 10;
+
+		double a = 0;
+		double b = 0;
+		int s = 0;	//Sign - знак операции
+		BOOL complete = false;	//Завершенная операция
+		BOOL stored = FALSE;
 
 INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -176,7 +182,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		(
 			0, "Button", "*",
 			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			g_START_X + (g_iBtnSize + g_INTERVAL) * 3, g_START_Y + g_SCREEN_HEIGHT + (g_iBtnSize + g_INTERVAL),
+			g_START_X + (g_iBtnSize + g_INTERVAL) * 3, g_START_Y + g_SCREEN_HEIGHT + (g_iBtnSize + g_INTERVAL * 2),
 			g_iBtnSize, g_iBtnSize,
 			hwnd, (HMENU)IDC_BUTTON_ASTER,
 			GetModuleHandle(NULL), NULL
@@ -185,7 +191,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		(
 			0, "Button", "-",
 			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-			g_START_X + (g_iBtnSize + g_INTERVAL) * 3, g_START_Y + g_SCREEN_HEIGHT + (g_iBtnSize + g_INTERVAL) * 2,
+			g_START_X + (g_iBtnSize + g_INTERVAL) * 3, g_START_Y + g_SCREEN_HEIGHT + (g_iBtnSize + g_INTERVAL) * 2 + g_INTERVAL,
 			g_iBtnSize, g_iBtnSize,
 			hwnd, (HMENU)IDC_BUTTON_MINUS,
 			GetModuleHandle(NULL), NULL
@@ -230,6 +236,12 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		CHAR sz_digit[2] = {};
 		if (LOWORD(wParam) >= IDC_BUTTON_0 && LOWORD(wParam) <= IDC_BUTTON_9)
 		{
+			if (stored == TRUE)
+			{
+				SendMessage(hEdit, WM_SETTEXT, 0, (LPARAM)"");
+				for (int i = 0; i < SIZE; i++) sz_buffer[i] = 0;
+				stored = FALSE;
+			}
 			sz_digit[0] = LOWORD(wParam) - 952;
 			strcat(sz_buffer, sz_digit);
 			SendMessage(hEdit, WM_SETTEXT, 0, (LPARAM)sz_buffer);
@@ -243,9 +255,46 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		if (LOWORD(wParam) == IDC_BUTTON_CLEAR)
 		{
 			SendMessage(hEdit, WM_SETTEXT, 0, (LPARAM)"");
+			a = b = 0;
+			s = 0;
+			stored = FALSE;
+		}
+		if (LOWORD(wParam) >= IDC_BUTTON_PLUS && LOWORD(wParam) <= IDC_BUTTON_SLASH)
+		{
+			SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_EQUAL), 0);
+			SendMessage(hEdit, WM_GETTEXT, SIZE, (LPARAM)sz_buffer);
+			a = strtod(sz_buffer, NULL);
+			s = LOWORD(wParam);
+			stored = TRUE;
+		}
+		if (LOWORD(wParam) == IDC_BUTTON_EQUAL)
+		{
+			SendMessage(hEdit, WM_GETTEXT, SIZE, (LPARAM)sz_buffer);
+			b = strtod(sz_buffer, NULL);
+				switch (s)
+				{
+				case IDC_BUTTON_PLUS: a += b; break;
+				case IDC_BUTTON_MINUS: a -= b; break;
+				case IDC_BUTTON_ASTER: a *= b; break;
+				case IDC_BUTTON_SLASH: a /= b; break;
+				default: a = b;
+				}
+			sprintf(sz_buffer, "%f", a);
+			SendMessage(hEdit, WM_SETTEXT, 0, (LPARAM)sz_buffer);
+			stored = TRUE;
 		}
 	}
 		break;
+	case WM_KEYDOWN:
+	{
+		if (LOWORD(wParam) >= '0' && LOWORD(wParam) <= '9')SendMessage(hwnd, WM_COMMAND, LOWORD(wParam) + 1000 - '0', 0);
+		switch (LOWORD(wParam))
+		{
+		case VK_OEM_PERIOD: SendMessage(hwnd, WM_COMMAND, IDC_BUTTON_POINT, 0); break;
+		case VK_ESCAPE: SendMessage(hwnd, WM_COMMAND, IDC_BUTTON_CLEAR, 0); break;
+		}
+	};
+	break;
 	case WM_SIZE:
 	case WM_MOVE:
 	{
